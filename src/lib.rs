@@ -65,6 +65,6 @@ mod tests {
     }
 
     fn new_tree(size: usize) -> FenwickTree<i32> {
-        FenwickTree::<i32>::new(size)
+        FenwickTree::<i32>::of_size(size)
     }
 }
