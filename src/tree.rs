@@ -13,6 +13,7 @@ use std::{fmt::Debug, ops::Range};
 /// # use crate::tree::FenwickTree;
 ///
 /// let tree = FenwickTree::<i32>::of_size(10);
+/// // TODO
 ///
 /// ```
 ///
@@ -62,15 +63,15 @@ use std::{fmt::Debug, ops::Range};
 /// ```
 /// The behaviour of "adding `1`" is flipping all trailing set bits and flipping first unset bit.
 /// For example:
-///     - `i = 000`, `!i = 110`, `-i = 111`
-///     - `i = 001`, `!i = 101`, `-i = 110`
+///     - `i = 001`, `!i = 110`, `-i = 111`
+///     - `i = 010`, `!i = 101`, `-i = 110`
 ///     - `i = 011`, `!i = 100`, `-i = 101`
 ///     - `i = 100`, `!i = 011`, `-i = 100`
 ///
 /// Hence, `i & (-i)` extracts first set bit from the `i`.
 /// For example:
-///     - `i = 000`, `i & (-i) = 001 & 111 = 001`
-///     - `i = 001`, `i & (-i) = 010 & 110 = 010`
+///     - `i = 001`, `i & (-i) = 001 & 111 = 001`
+///     - `i = 010`, `i & (-i) = 010 & 110 = 010`
 ///     - `i = 011`, `i & (-i) = 011 & 101 = 001`
 ///     - `i = 100`, `i & (-i) = 100 & 100 = 100`
 ///
@@ -132,23 +133,28 @@ impl<I> FenwickTree<I>
 where
     I: Debug + Default + Copy + AddAssign + SubAssign,
 {
+    /// Constructs a new Fenwick tree of the specified `size` with each element set as
+    /// `I::default()`.
     pub fn of_size(size: usize) -> Self {
         Self {
             tree: vec![I::default(); size],
         }
     }
 
+    /// A size of the tree.
     pub fn size(&self) -> usize {
         self.tree.len()
     }
 
+    /// A partial sum of the specified range.
+    ///
+    /// Complexity: O(log n).
     pub fn sum(&self, range: Range<usize>) -> I {
         let mut s = I::default();
         let mut i = range.start;
         let mut j = range.end;
 
         while j > i {
-            println!("{:?}", j);
             s += self.tree[j - 1];
             j = prev(j);
         }
@@ -161,6 +167,9 @@ where
         s
     }
 
+    /// Updates the value at `i` by `delta`.
+    ///
+    /// Complexity: O(log n).
     pub fn add(&mut self, mut i: usize, delta: I) {
         while i < self.tree.len() {
             self.tree[i] += delta;
