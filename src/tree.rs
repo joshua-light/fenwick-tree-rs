@@ -13,11 +13,11 @@
 //! of `[i - (i & (-i)), i]` range.
 //!
 //! This looks a bit scary but the whole intuition behind Fenwick tree is very simple:
-//! the position of the first `1` bit in the `i` equals to the size of the range covered by `i`.
-//!     - `i = 4 = 100`, so it covers `4` items or `[1, 4]` range (note one-based indexing)
-//!     - `i = 3 = 011`, so it covers `1` item  or `[3, 3]` range
-//!     - `i = 2 = 010`, so it covers `2` items or `[1, 2]` range
-//!     - `i = 1 = 001`, so it covers `1` item  or `[1, 1]` range
+//! the position of the first `1` bit in the `i` defines the size of the range covered by `i`.
+//!     - `i = 4 = 100`, so it covers `100 (4)` items or `[1, 4]` range (note one-based indexing)
+//!     - `i = 3 = 011`, so it covers `001 (1)` item  or `[3, 3]` range
+//!     - `i = 2 = 010`, so it covers `010 (2)` items or `[1, 2]` range
+//!     - `i = 1 = 001`, so it covers `001 (1)` item  or `[1, 1]` range
 //!
 //! Prefix sum of `n` items consists of sum of these ranges, depending on `n`.
 //!     - `n = 4` sum of `[1, 4]` (4 index)
