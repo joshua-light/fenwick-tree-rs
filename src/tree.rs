@@ -175,12 +175,7 @@ where
     }
 }
 
-/// Converts first trailing `1` bit into `0` in the binary representation of the `i`.
-///
-/// `0001` -> `0000`
-/// `0010` -> `0000`
-/// `0011` -> `0010`
-/// `1010` -> `1000`
+/// Flips first trailing `1` in the binary representation of the `i`.
 ///
 /// Applying `i = prev(i)` allows traversing the array from the initial `i` to `0` by N steps,
 ///     where N -- the number of `1`s in the binary representation of the initial `i`.
@@ -201,12 +196,7 @@ const fn prev(i: usize) -> usize {
     i & (i - 1)
 }
 
-/// Converts first trailing `0` bit into `1` in the binary representation of the `i`.
-///
-/// `0000` -> `0001`
-/// `0010` -> `0011`
-/// `0011` -> `0111`
-/// `1010` -> `1011`
+/// Flips first trailing `0` in the binary representation of the `i`.
 ///
 /// In the same way as with `prev`, `i = next(i)` allows traversing the array but in the opposite
 /// direction.
