@@ -10,63 +10,47 @@
 //! original paper).
 //!
 //! Sums are stored in the array by the following rule: an item with index `i` stores a cumulative sum
-//! of `[i - (i & (-i)), i]` range.
+//! of `[i - g(i), i]` range, where `g(i) = i & (-i)` or the size of the range covered by `i`.
 //!
 //! This looks a bit scary but the whole intuition behind Fenwick tree is very simple:
-//! the position of the first `1` bit in the `i` defines the size of the range covered by `i`.
-//!     - `i = 4 = 100`, so it covers `100 (4)` items or `[1, 4]` range (note one-based indexing)
-//!     - `i = 3 = 011`, so it covers `001 (1)` item  or `[3, 3]` range
-//!     - `i = 2 = 010`, so it covers `010 (2)` items or `[1, 2]` range
-//!     - `i = 1 = 001`, so it covers `001 (1)` item  or `[1, 1]` range
+//! the position of the first `1` bit in the `i` defines the value of `g(i)`.
+//!     - `i = 4 = 100`, so it covers `g(i) = 100 (4)` items or `[1, 4]` range (note one-based indexing)
+//!     - `i = 3 = 011`, so it covers `g(i) = 001 (1)` item  or `[3, 3]` range
+//!     - `i = 2 = 010`, so it covers `g(i) = 010 (2)` items or `[1, 2]` range
+//!     - `i = 1 = 001`, so it covers `g(i) = 001 (1)` item  or `[1, 1]` range
 //!
-//! Prefix sum of `n` items consists of sum of these ranges, depending on `n`.
+//! ## Querying
+//!
+//! Prefix sum of `n` items consists of sum of some number of ranges, depending on `n`.
 //!     - `n = 4` sum of `[1, 4]` (4 index)
 //!     - `n = 3` sum of `[3, 3]` (3 index) and `[1, 2]` (2 index)
 //!     - `n = 2` sum of `[1, 2]` (2 index)
 //!     - `n = 1` sum of `[1, 1]` (1 index)
 //!
-//! ## Querying
-//!
 //! In order to calculate a prefix sum, we need to traverse the array from right
-//! to left, decreasing `i` by the size of the range it covers.
-//!     - `i = 4` -> `0`
-//!     - `i = 3` -> `2`
-//!     - `i = 2` -> `0`
-//!     - `i = 1` -> `0`
+//! to left, decreasing `i` by `g(i)`.
+//!     - `i = 100 (4)`, `i - g(i) = 000 (0)`
+//!     - `i = 011 (3)`, `i - g(i) = 010 (2)`
+//!     - `i = 010 (2)`, `i - g(i) = 000 (0)`
+//!     - `i = 001 (1)`, `i - g(i) = 000 (0)`
 //!
-//! From the binary perspective, this means flipping the first `1` bit in the `i`.
-//!     - `i = 4 = 100` -> `000`
-//!     - `i = 3 = 011` -> `010`
-//!     - `i = 2 = 010` -> `000`
-//!     - `i = 1 = 001` -> `000`
-//!
-//! In order to flip the first `1` bit in `i`, we need to subtract some number `N` from `i`,
-//! where `N` has only one bit set at the same position.
-//!     - `i = 4 = 100`, `N = 100`, `i - N = 000`
-//!     - `i = 3 = 011`, `N = 001`, `i - N = 010`
-//!     - `i = 2 = 010`, `N = 010`, `i - N = 010`
-//!     - `i = 1 = 001`, `N = 001`, `i - N = 000`
-//!
-//! `N` can be obtained in a simple way, using the representation of negative numbers in two's
-//! complement systems: `-i` means `!i + 1`.
+//! In order to do so, we need a way to calculate `g(i)`. This can easily be done by using the
+//! representation of negative numbers in two's complement systems, where `-i` means `!i + 1`.
 //!
 //! ```
-//! # fn any_number() -> i32 { 4 }
+//! # fn any_number() -> i32 { 3 }
 //! let i = any_number();
 //! assert_eq!(!i + 1, -i);
 //! ```
 //!
-//! In binary, `!i + 1` would invert all bits in the `i` and then flip all bits up to first `0`.
+//! In binary, `!i` inverts all bits in the `i`, and `!i + 1` flips all bits up to first `0`.
 //!     - `i = 001`, `!i = 110`, `-i = 111`
 //!     - `i = 010`, `!i = 101`, `-i = 110`
 //!     - `i = 011`, `!i = 100`, `-i = 101`
 //!     - `i = 100`, `!i = 011`, `-i = 100`
 //!
 //! This means that `i` and `-i` have all bits different except the first `1` bit.
-//! Hence, `i & (-i)` is a number `N` from the statements above.
-//!
-//! That's why `i - (i & (-i))` would flip the first `1` bit in `i`, allowing to traverse the array
-//! and calculating the prefix sum.
+//! So, `g(i)` is as simple as `i & (-i)`.
 //!
 //! ## Updating
 //!
@@ -77,8 +61,7 @@
 //!     - `i = 2` -> `4`
 //!     - `i = 1` -> `2`
 //!
-//! Here similar logic applies as for querying: we need to increase `i` by the size of the range it covers.
-//! The size of the range covered by `i` is `i & (-i)`, thus `i + (i & (-i))` is what we need.
+//! Here similar logic applies as for querying: we need to increase `i` by `g(i)`.
 //!     - `i = 4 = 100`, `i + (i & (-i)) = 100 + 100 = 1000 (8)`
 //!     - `i = 3 = 011`, `i + (i & (-i)) = 011 + 001 = 0100 (4)`
 //!     - `i = 2 = 010`, `i + (i & (-i)) = 010 + 010 = 0100 (4)`
@@ -89,9 +72,11 @@
 //! # Notes
 //!
 //! The explanation above assumes one-based indexing, however, in Rust, as in most other programming
-//! languages, indexing is zero-based.
+//! languages, indexing is zero-based. Thus, it's not that easy to calculate `i & (-i)` if `i` is
+//! of `usize`.
+//!
 //! For the sake of code simplicity and performance, the following changes were made:
-//!     - querying is one-based:  `i & (i - 1)` (or `i - (i & (-i))`)
+//!     - querying is one-based:  `i & (i - 1)`
 //!     - updating is zero-based: `i | (i + 1)
 
 use std::ops::{AddAssign, Range, SubAssign};
