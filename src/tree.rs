@@ -174,16 +174,10 @@ where
     }
 }
 
-/// Flips first trailing `1` in the binary representation of the `i`.
+/// Flips first trailing `1` in the binary representation of the `i`. Same as `i - (i & (-i))` (see
+/// module docs).
 ///
-/// Applying `i = prev(i)` allows traversing the array from the initial `i` to `0` by N steps,
-///     where N -- the number of `1`s in the binary representation of the initial `i`.
-///
-/// For example, traversing from `1111` involves the following sequence of indices:
-///     `1111` (15) -> `1110` (14) -> `1100` (12) -> `1000` (8) -> `0000` (0).
-///
-/// Considering the way (see `FenwickTree` docs) in which sums are stored in the tree, this allows
-/// fast calculating of prefix sums:
+/// This allows fast calculating of prefix sums:
 ///     - call `i = prev(i)` until `i` is greater than 0
 ///     - access sums by `i - 1`
 ///
@@ -199,15 +193,7 @@ const fn prev(i: usize) -> usize {
 ///
 /// In the same way as with `prev`, `i = next(i)` allows traversing the array but in the opposite
 /// direction.
-///
-/// For example, traversing from `0000` to `1111` involves the following sequence of indices:
-///     `0000` (0) -> `0001` (1) -> `0011` (3) -> `0111` (7) -> `1111` (15).
-///
-/// This allows to update the value at `i` and all cumulative sums that contains the `i`:
-///     - call `i = next(i)` until `i` is less than length of the array
-///     - access sums by `i`
-///
-/// Unlike `prev`, this function assumes that indexing is zero-based, hence we access sums by `i`.
+/// However, unlike `prev`, this function assumes that indexing is zero-based, hence we access sums by `i`.
 const fn next(i: usize) -> usize {
     i | (i + 1)
 }
