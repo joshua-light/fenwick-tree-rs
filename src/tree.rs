@@ -88,7 +88,7 @@
 //!
 //! That's it!
 //!
-//! ## Notes
+//! # Notes
 //!
 //! The explanation above assumes one-based indexing, however, in Rust, as in most other programming
 //! languages, indexing is zero-based.
