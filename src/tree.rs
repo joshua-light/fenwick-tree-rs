@@ -128,16 +128,6 @@ where
     }
 
     /// A size of the backing vector of the tree.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use fenwick_tree::FenwickTree;
-    ///
-    /// let mut tree = FenwickTree::<i8>::of_size(3);
-    ///
-    /// assert_eq!(tree.size(), 3);
-    /// ```
     pub fn size(&self) -> usize {
         self.tree.len()
     }
