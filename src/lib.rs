@@ -8,38 +8,6 @@ mod tests {
     use crate::FenwickTree;
 
     #[test]
-    fn new_tree_has_correct_size() {
-        let tree = new_tree(3);
-
-        assert_eq!(tree.size(), 3);
-    }
-
-    #[test]
-    fn new_tree_total_sum_is_zero() {
-        let tree = new_tree(3);
-
-        assert_eq!(tree.sum(0..3), 0);
-    }
-
-    #[test]
-    fn range_sum_is_calculated_correctly() {
-        let mut tree = new_tree(3);
-
-        tree.add(0, 1);
-        tree.add(1, 2);
-        tree.add(2, 3);
-
-        assert_eq!(tree.sum(0..1), 1);
-        assert_eq!(tree.sum(0..2), 3);
-        assert_eq!(tree.sum(0..3), 6);
-
-        assert_eq!(tree.sum(1..2), 2);
-        assert_eq!(tree.sum(1..3), 5);
-
-        assert_eq!(tree.sum(2..3), 3);
-    }
-
-    #[test]
     fn range_sum_is_calculated_correctly_for_big_tree() {
         let mut tree = new_tree(100);
 

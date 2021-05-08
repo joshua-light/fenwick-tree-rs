@@ -52,7 +52,6 @@
 //!
 //! ```
 //! # fn any_number() -> i32 { 4 }
-//!
 //! let i = any_number();
 //! assert_eq!(!i + 1, -i);
 //! ```
@@ -115,10 +114,16 @@ use std::ops::{AddAssign, Range, SubAssign};
 /// tree.add(1, 2);
 /// tree.add(2, 3);
 ///
+/// assert_eq!(tree.sum(0..1), 1);
+/// assert_eq!(tree.sum(0..2), 3);
 /// assert_eq!(tree.sum(0..3), 6);
 ///
-/// ```
+/// assert_eq!(tree.sum(1..2), 2);
+/// assert_eq!(tree.sum(1..3), 5);
 ///
+/// assert_eq!(tree.sum(2..3), 3);
+///
+/// ```
 pub struct FenwickTree<I>
 where
     I: Default + Copy + AddAssign + SubAssign,
@@ -138,7 +143,17 @@ where
         }
     }
 
-    /// A size of the tree.
+    /// A size of the backing vector of the tree.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use fenwick_tree::FenwickTree;
+    ///
+    /// let mut tree = FenwickTree::<i8>::of_size(3);
+    ///
+    /// assert_eq!(tree.size(), 3);
+    /// ```
     pub fn size(&self) -> usize {
         self.tree.len()
     }
