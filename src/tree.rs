@@ -70,20 +70,19 @@
 //!
 //! ## Updating
 //!
-//! In the same way, updating a value at `i` means traversing the array from left to right, updating
-//! ranges that contain value at `i`.
-//!     - `i = 4` is contained in `[1, 4]`
-//!     - `i = 3` is contained in `[3, 3]`, `[1, 4]`
-//!     - `i = 2` is contained in `[1, 2]`, `[1, 4]`
-//!     - `i = 1` is contained in `[1, 1]`, `[1, 2]`, `[1, 4]`
+//! Updating a value at `i` means traversing the array from left to right, updating
+//! ranges that contain the value.
+//!     - `i = 4` -> `8`
+//!     - `i = 3` -> `4`
+//!     - `i = 2` -> `4`
+//!     - `i = 1` -> `2`
 //!
-//! Here the intuition is the same: we need to increase `i` by the size of the range it covers.
-//! Following the symmetry, if `i - (i & (-i))` is used to iterate from right to left,
-//! then `i + (i & (-i))` should be used to iterate from left to right.
-//!     - `i = 4 = 100`, `i + (i & (-i)) = 100 + 100 = 1000`
-//!     - `i = 3 = 011`, `i + (i & (-i)) = 011 + 001 = 0100`
-//!     - `i = 2 = 010`, `i + (i & (-i)) = 010 + 010 = 0100`
-//!     - `i = 1 = 001`, `i + (i & (-i)) = 001 + 001 = 0010`
+//! Here similar logic applies as for querying: we need to increase `i` by the size of the range it covers.
+//! The size of the range covered by `i` is `i & (-i)`, thus `i + (i & (-i))` is what we need.
+//!     - `i = 4 = 100`, `i + (i & (-i)) = 100 + 100 = 1000 (8)`
+//!     - `i = 3 = 011`, `i + (i & (-i)) = 011 + 001 = 0100 (4)`
+//!     - `i = 2 = 010`, `i + (i & (-i)) = 010 + 010 = 0100 (4)`
+//!     - `i = 1 = 001`, `i + (i & (-i)) = 001 + 001 = 0010 (2)`
 //!
 //! That's it!
 //!
