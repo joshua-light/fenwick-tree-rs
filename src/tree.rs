@@ -27,7 +27,7 @@
 //!
 //! ## Querying
 //!
-//! In order to calculate the prefix sum, we need to traverse the array from right
+//! In order to calculate a prefix sum, we need to traverse the array from right
 //! to left, decreasing `i` by the size of the range it covers.
 //!     - `i = 4` -> `0`
 //!     - `i = 3` -> `2`
