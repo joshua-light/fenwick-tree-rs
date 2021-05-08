@@ -96,8 +96,7 @@
 //!     - querying is one-based:  `i & (i - 1)` (or `i - (i & (-i))`)
 //!     - updating is zero-based: `i | (i + 1)
 
-use std::ops::{AddAssign, SubAssign};
-use std::{fmt::Debug, ops::Range};
+use std::ops::{AddAssign, Range, SubAssign};
 
 /// An implementation of the binary indexed tree (Fenwick tree) data structure.
 ///
@@ -122,14 +121,14 @@ use std::{fmt::Debug, ops::Range};
 ///
 pub struct FenwickTree<I>
 where
-    I: Debug + Default + Copy + AddAssign + SubAssign,
+    I: Default + Copy + AddAssign + SubAssign,
 {
     tree: Vec<I>,
 }
 
 impl<I> FenwickTree<I>
 where
-    I: Debug + Default + Copy + AddAssign + SubAssign,
+    I: Default + Copy + AddAssign + SubAssign,
 {
     /// Constructs a new Fenwick tree of the specified `size` with each element set as
     /// `I::default()`.
