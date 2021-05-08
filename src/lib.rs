@@ -2,6 +2,7 @@ mod tree;
 
 pub use tree::FenwickTree;
 
+// Some of the tests are implemented as documentation tests.
 #[cfg(test)]
 mod tests {
     use crate::FenwickTree;
@@ -18,17 +19,6 @@ mod tests {
         let tree = new_tree(3);
 
         assert_eq!(tree.sum(0..3), 0);
-    }
-
-    #[test]
-    fn total_sum_changes_after_adding() {
-        let mut tree = new_tree(3);
-
-        tree.add(0, 1);
-        tree.add(1, 2);
-        tree.add(2, 3);
-
-        assert_eq!(tree.sum(0..3), 6);
     }
 
     #[test]

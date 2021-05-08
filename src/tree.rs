@@ -1,3 +1,101 @@
+//! A module that contains implementation of the Fenwick tree.
+//!
+//! # Explanation
+//!
+//! In this section an explanation of some of the implementation details is provided.
+//!
+//! ## Indexing
+//!
+//! The easiest explanation considers that indexing of the array is one-based (as in the
+//! original paper).
+//!
+//! Sums are stored in the array by the following rule: an item with index `i` stores a cumulative sum
+//! of `[i - (i & (-i)), i]` range.
+//!
+//! This looks a bit scary but the whole intuition behind Fenwick tree is very simple:
+//! the position of the first `1` bit in the `i` equals to the size of the range covered by `i`.
+//!     - `i = 4 = 100`, so it covers `4` items or `[1, 4]` range (note one-based indexing)
+//!     - `i = 3 = 011`, so it covers `1` item  or `[3, 3]` range
+//!     - `i = 2 = 010`, so it covers `2` items or `[1, 2]` range
+//!     - `i = 1 = 001`, so it covers `1` item  or `[1, 1]` range
+//!
+//! Prefix sum of `n` items consists of sum of these ranges, depending on `n`.
+//!     - `n = 4` sum of `[1, 4]` (4 index)
+//!     - `n = 3` sum of `[3, 3]` (3 index) and `[1, 2]` (2 index)
+//!     - `n = 2` sum of `[1, 2]` (2 index)
+//!     - `n = 1` sum of `[1, 1]` (1 index)
+//!
+//! ## Querying
+//!
+//! In order to calculate the prefix sum, we need to traverse the array from right
+//! to left, decreasing `i` by the size of the range it covers.
+//!     - `i = 4` -> `0`
+//!     - `i = 3` -> `2`
+//!     - `i = 2` -> `0`
+//!     - `i = 1` -> `0`
+//!
+//! From the binary perspective, this means flipping the first `1` bit in the `i`.
+//!     - `i = 4 = 100` -> `000`
+//!     - `i = 3 = 011` -> `010`
+//!     - `i = 2 = 010` -> `000`
+//!     - `i = 1 = 001` -> `000`
+//!
+//! In order to flip the first `1` bit in `i`, we need to subtract some number `N` from `i`,
+//! where `N` has only one bit set at the same position.
+//!     - `i = 4 = 100`, `N = 100`, `i - N = 000`
+//!     - `i = 3 = 011`, `N = 001`, `i - N = 010`
+//!     - `i = 2 = 010`, `N = 010`, `i - N = 010`
+//!     - `i = 1 = 001`, `N = 001`, `i - N = 000`
+//!
+//! `N` can be obtained in a simple way, using the representation of negative numbers in two's
+//! complement systems: `-i` means `!i + 1`.
+//!
+//! ```
+//! # fn any_number() -> i32 { 4 }
+//!
+//! let i = any_number();
+//! assert_eq!(!i + 1, -i);
+//! ```
+//!
+//! In binary, `!i + 1` would invert all bits in the `i` and then flip all bits up to first `0`.
+//!     - `i = 001`, `!i = 110`, `-i = 111`
+//!     - `i = 010`, `!i = 101`, `-i = 110`
+//!     - `i = 011`, `!i = 100`, `-i = 101`
+//!     - `i = 100`, `!i = 011`, `-i = 100`
+//!
+//! This means that `i` and `-i` have all bits different except the first `1` bit.
+//! Hence, `i & (-i)` is a number `N` from the statements above.
+//!
+//! That's why `i - (i & (-i))` would flip the first `1` bit in `i`, allowing to traverse the array
+//! and calculating the prefix sum.
+//!
+//! ## Updating
+//!
+//! In the same way, updating a value at `i` means traversing the array from left to right, updating
+//! ranges that contain value at `i`.
+//!     - `i = 4` is contained in `[1, 4]`
+//!     - `i = 3` is contained in `[3, 3]`, `[1, 4]`
+//!     - `i = 2` is contained in `[1, 2]`, `[1, 4]`
+//!     - `i = 1` is contained in `[1, 1]`, `[1, 2]`, `[1, 4]`
+//!
+//! Here the intuition is the same: we need to increase `i` by the size of the range it covers.
+//! Following the symmetry, if `i - (i & (-i))` is used to iterate from right to left,
+//! then `i + (i & (-i))` should be used to iterate from left to right.
+//!     - `i = 4 = 100`, `i + (i & (-i)) = 100 + 100 = 1000`
+//!     - `i = 3 = 011`, `i + (i & (-i)) = 011 + 001 = 0100`
+//!     - `i = 2 = 010`, `i + (i & (-i)) = 010 + 010 = 0100`
+//!     - `i = 1 = 001`, `i + (i & (-i)) = 001 + 001 = 0010`
+//!
+//! That's it!
+//!
+//! ## Notes
+//!
+//! The explanation above assumes one-based indexing, however, in Rust, as in most other programming
+//! languages, indexing is zero-based.
+//! For the sake of code simplicity and performance, the following changes were made:
+//!     - querying is one-based:  `i & (i - 1)` (or `i - (i & (-i))`)
+//!     - updating is zero-based: `i | (i + 1)
+
 use std::ops::{AddAssign, SubAssign};
 use std::{fmt::Debug, ops::Range};
 
@@ -10,118 +108,18 @@ use std::{fmt::Debug, ops::Range};
 /// # Examples
 ///
 /// ```
-/// # use crate::tree::FenwickTree;
+/// use fenwick_tree::FenwickTree;
 ///
-/// let tree = FenwickTree::<i32>::of_size(10);
-/// // TODO
+/// let mut tree = FenwickTree::<i32>::of_size(3);
+///
+/// tree.add(0, 1);
+/// tree.add(1, 2);
+/// tree.add(2, 3);
+///
+/// assert_eq!(tree.sum(0..3), 6);
 ///
 /// ```
 ///
-/// # Explanation
-///
-/// ## Storage
-///
-/// The easiest explanation considers that indexing of the array is one-based (as in the
-/// original paper).
-///
-/// Sums are stored in the array by the following rule: an item with index `i` stores a cumulative sum
-/// of `[i - (i & (-i)), i]` range.
-///
-/// This looks a bit scary but the intuition behind is very simple: the position of the first
-/// set bit in the `i` equals to the size of the range covered by `i`.
-/// For example:
-///     - `i = 4` is `100`, so it covers `4` items or simply `[1, 4]` range (note one-based indexing)
-///     - `i = 3` is `011`, so it covers `1` item  or simply `[3, 3]` range
-///     - `i = 2` is `010`, so it covers `2` items or simply `[1, 2]` range
-///     - `i = 1` is `001`, so it covers `1` item  or simply `[1, 1]` range
-///
-/// Prefix sum of `n` items consists of sum of these ranges, depending on `n`.
-/// For example:
-///     - `n = 4` is sum of `[1, 4]` (4 index)
-///     - `n = 3` is sum of `[3, 3]` (3 index) and `[1, 2]` (2 index)
-///     - `n = 2` is sum of `[1, 2]` (2 index)
-///     - `n = 1` is sum of `[1, 1]` (1 index)
-///
-/// ## Querying
-///
-/// In order to calculate the prefix sum, we need to traverse the array from right
-/// to left, decreasing `i` by the size of the range it covers.
-/// For example:
-///     - `i = 4` -> `0`
-///     - `i = 3` -> `2`
-///     - `i = 2` -> `0`
-///     - `i = 1` -> `0`
-///
-/// So, what is `i - (i & (-i))`?
-/// This operation decreases `i` by some step that is equal to `i & (-i)`.
-/// In two's complement systems `-i` means inverting the `i` and adding `1`:
-/// ```
-/// # fn any_number() -> i32 { 4 }
-///
-/// let i = any_number();
-/// assert_eq!(!i + 1, -i);
-/// ```
-/// The behaviour of "adding `1`" is flipping all trailing set bits and flipping first unset bit.
-/// For example:
-///     - `i = 001`, `!i = 110`, `-i = 111`
-///     - `i = 010`, `!i = 101`, `-i = 110`
-///     - `i = 011`, `!i = 100`, `-i = 101`
-///     - `i = 100`, `!i = 011`, `-i = 100`
-///
-/// Hence, `i & (-i)` extracts first set bit from the `i`.
-/// For example:
-///     - `i = 001`, `i & (-i) = 001 & 111 = 001`
-///     - `i = 010`, `i & (-i) = 010 & 110 = 010`
-///     - `i = 011`, `i & (-i) = 011 & 101 = 001`
-///     - `i = 100`, `i & (-i) = 100 & 100 = 100`
-///
-/// Thereby, decreasing `i` by `i & (-i)` means flipping the first set bit in `i`.
-/// We know that this bit is responsible for the size of the range covered by `i`.
-/// Moreover, flipping the bit means subtracting the size from the `i`.
-/// Thereby, iteration `i = i & (i - 0)` while `i > 0` will traverse the
-/// array in the same way as needed for prefix sum calculation.
-///
-/// ## Updating
-///
-/// In the same way updating a value at `i` means traversing the array from left to right, updating
-/// cumulative sums that contain value at `i`.
-/// For example:
-///     - `i = 4` updates ranges `[1, 4]`
-///     - `i = 3` updates ranges `[3, 3]`, `[1, 4]`
-///     - `i = 2` updates ranges `[1, 2]`, `[1, 4]`
-///     - `i = 1` updates ranges `[1, 1]`, `[1, 2]`, `[1, 4]`
-///
-/// Here the intuition is the same: we need to increase `i` by the size of the range it covers.
-/// For example:
-///     - `i = 4` -> `8`
-///     - `i = 3` -> `4`
-///     - `i = 2` -> `4`
-///     - `i = 1` -> `2`
-///
-/// In binary format this looks like:
-///     - `i = 4 = 0100` -> `1000`
-///     - `i = 3 = 0011` -> `0100`
-///     - `i = 2 = 0010` -> `0100`
-///     - `i = 1 = 0001` -> `0010`
-///
-/// Following the symmetry, if `i - (i & (-i))` decreases `i`, then `i + (i & (-i))` should
-/// increase it, allowing to iterate from left to right.
-/// `i + (i & (-i))` means adding the first set bit to `i`.
-/// For example:
-///     - `i = 4 = 0100`, `i + (i & (-i)) = 0100 + 0100 = 1000`
-///     - `i = 3 = 0011`, `i + (i & (-i)) = 0011 + 0001 = 0100`
-///     - `i = 2 = 0010`, `i + (i & (-i)) = 0010 + 0010 = 0100`
-///     - `i = 1 = 0001`, `i + (i & (-i)) = 0001 + 0001 = 0010`
-///
-/// That's it!
-///
-/// ## Notes
-///
-/// The explanation above assumes one-based indexing, however, in Rust, as in other programming
-/// languages, indexing is zero-based. For the sake of code simplicity and performance, the
-/// following changes were made:
-///     - querying is one-based:  `i & (i - 1)` (or `i - (i & (-i))`)
-///     - updating is zero-based: `i | (i + 1)
 pub struct FenwickTree<I>
 where
     I: Debug + Default + Copy + AddAssign + SubAssign,
