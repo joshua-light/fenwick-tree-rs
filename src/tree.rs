@@ -121,6 +121,8 @@ where
 {
     /// Constructs a new Fenwick tree of the specified `size` with each element set as
     /// `I::default()`.
+    ///
+    /// The vector is initialized with `vec![I::default(); size]`.
     pub fn of_size(size: usize) -> Self {
         Self {
             tree: vec![I::default(); size],
@@ -134,7 +136,7 @@ where
 
     /// A partial sum of the specified range.
     ///
-    /// Complexity: O(log n).
+    /// Complexity: _O_(log _n_).
     pub fn sum(&self, range: Range<usize>) -> I {
         let mut s = I::default();
         let mut i = range.start;
@@ -155,7 +157,7 @@ where
 
     /// Updates the value at `i` by `delta`.
     ///
-    /// Complexity: O(log n).
+    /// Complexity: _O_(log _n_).
     pub fn add(&mut self, mut i: usize, delta: I) {
         while i < self.tree.len() {
             self.tree[i] += delta;
