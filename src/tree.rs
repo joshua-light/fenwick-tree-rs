@@ -1,8 +1,8 @@
-//! A module that contains implementation of the Fenwick tree.
+//! A module that contains an implementation of the Fenwick tree.
 //!
 //! # Explanation
 //!
-//! In this section an explanation of some of the implementation details is provided.
+//! In this section, an explanation of some of the implementation details is provided.
 //!
 //! ## Indexing
 //!
