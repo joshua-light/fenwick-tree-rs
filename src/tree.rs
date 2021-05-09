@@ -42,10 +42,10 @@ where
         let mut j = range.end;
 
         if i == j {
-            return Err(SumError::EmptyRange(i));
+            return Err(SumError::EmptyRange { start: i });
         }
         if i > j {
-            return Err(SumError::DecreasingRange(i, j));
+            return Err(SumError::DecreasingRange { start: i, end: j });
         }
 
         while j > i {
@@ -68,7 +68,7 @@ where
         let size = self.size();
 
         if i >= size {
-            return Err(AddError::IndexOutOfRange(i, size));
+            return Err(AddError::IndexOutOfRange { index: i, size });
         }
 
         while i < size {

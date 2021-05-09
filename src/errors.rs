@@ -5,10 +5,10 @@ use std::fmt::{Display, Formatter, Result as FmtResult};
 #[derive(Debug, PartialEq, Eq)]
 pub enum SumError {
     /// Range is empty: `(0..0)`, `(1..1)`, etc.
-    EmptyRange(usize),
+    EmptyRange { start: usize },
 
     /// Range is decreasing: `(10..0)`, etc.
-    DecreasingRange(usize, usize),
+    DecreasingRange { start: usize, end: usize },
 }
 
 impl Error for SumError {
@@ -20,8 +20,10 @@ impl Error for SumError {
 impl Display for SumError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match *self {
-            SumError::EmptyRange(i) => write!(f, "Range ({}..{}) is empty", i, i),
-            SumError::DecreasingRange(i, j) => write!(f, "Range ({}..{}) is decreasing", i, j),
+            SumError::EmptyRange { start } => write!(f, "Range ({}..{}) is empty", start, start),
+            SumError::DecreasingRange { start, end } => {
+                write!(f, "Range ({}..{}) is decreasing", start, end)
+            }
         }
     }
 }
@@ -30,7 +32,7 @@ impl Display for SumError {
 #[derive(Debug, PartialEq, Eq)]
 pub enum AddError {
     /// Index is greater than the size of the tree.
-    IndexOutOfRange(usize, usize),
+    IndexOutOfRange { index: usize, size: usize },
 }
 
 impl Error for AddError {
@@ -42,8 +44,8 @@ impl Error for AddError {
 impl Display for AddError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match *self {
-            AddError::IndexOutOfRange(i, size) => {
-                write!(f, "Index `{}` is greater than the size `{}`", i, size)
+            AddError::IndexOutOfRange { index, size } => {
+                write!(f, "Index `{}` is greater than the size `{}`", index, size)
             }
         }
     }

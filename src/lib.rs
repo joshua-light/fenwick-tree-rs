@@ -136,7 +136,7 @@ mod tests {
 
         let err = tree.sum(0..0).err().unwrap();
 
-        assert_eq!(SumError::EmptyRange(0), err);
+        assert_eq!(SumError::EmptyRange { start: 0 }, err);
     }
 
     #[test]
@@ -145,7 +145,7 @@ mod tests {
 
         let err = tree.sum(10..0).expect_err("");
 
-        assert_eq!(SumError::DecreasingRange(10, 0), err);
+        assert_eq!(SumError::DecreasingRange { start: 10, end: 0 }, err);
     }
 
     #[test]
@@ -154,7 +154,7 @@ mod tests {
 
         let err = tree.add(4, 0).expect_err("");
 
-        assert_eq!(AddError::IndexOutOfRange(4, 3), err);
+        assert_eq!(AddError::IndexOutOfRange { index: 4, size: 3 }, err);
     }
 
     #[test]
