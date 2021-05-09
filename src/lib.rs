@@ -3,6 +3,8 @@
 //! The general idea of the Fenwick tree is that it allows for both queries and updates of partial
 //! sums to be performed in _O_(log _n_) time.
 //!
+//! For more details, see [Explanation](#explanation) section.
+//!
 //! # Examples
 //!
 //! Constructing a new tree that is equal to `[1, 2, 3]` array.
@@ -37,7 +39,7 @@
 //! assert_eq!(tree.sum(2..3).unwrap(), 3);
 //! ```
 //!
-//! For error handling, check [`AddError`] and [`SumError`] structs.
+//! For error handling, see [`AddError`] and [`SumError`] structs.
 //!
 //! # Explanation
 //!
