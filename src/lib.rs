@@ -13,18 +13,18 @@
 //! let mut tree = FenwickTree::<i32>::of_size(3);
 //!
 //! // Both `add` and `sum` have complexity O(log n).
-//! tree.add(0, 1); // Adds `1` to element at `0`.
-//! tree.add(1, 2); // Adds `2` to element at `1`.
-//! tree.add(2, 3); // Adds `3` to element at `2`.
+//! tree.add(0, 1).unwrap(); // Adds `1` to element at `0`.
+//! tree.add(1, 2).unwrap(); // Adds `2` to element at `1`.
+//! tree.add(2, 3).unwrap(); // Adds `3` to element at `2`.
 //!
-//! assert_eq!(tree.sum(0..1), 1);
-//! assert_eq!(tree.sum(0..2), 3);
-//! assert_eq!(tree.sum(0..3), 6);
+//! assert_eq!(tree.sum(0..1).unwrap(), 1);
+//! assert_eq!(tree.sum(0..2).unwrap(), 3);
+//! assert_eq!(tree.sum(0..3).unwrap(), 6);
 //!
-//! assert_eq!(tree.sum(1..2), 2);
-//! assert_eq!(tree.sum(1..3), 5);
+//! assert_eq!(tree.sum(1..2).unwrap(), 2);
+//! assert_eq!(tree.sum(1..3).unwrap(), 5);
 //!
-//! assert_eq!(tree.sum(2..3), 3);
+//! assert_eq!(tree.sum(2..3).unwrap(), 3);
 //! ```
 //!
 //! # Explanation
@@ -105,28 +105,57 @@
 //! # References
 //! * [A New Data Structure for Cumulative Frequency Tables (1994)](https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.14.8917)
 
+mod errors;
 mod tree;
 
+pub use errors::{AddError, SumError};
 pub use tree::FenwickTree;
 
 // Some of the tests are implemented as documentation tests.
 #[cfg(test)]
 mod tests {
-    use crate::FenwickTree;
+    use crate::*;
+
+    #[test]
+    fn sum_of_empty_range_is_err() {
+        let tree = new_tree(3);
+
+        let err = tree.sum(0..0).err().unwrap();
+
+        assert_eq!(SumError::EmptyRange(0), err);
+    }
+
+    #[test]
+    fn sum_of_decreasing_range_is_err() {
+        let tree = new_tree(3);
+
+        let err = tree.sum(10..0).expect_err("");
+
+        assert_eq!(SumError::DecreasingRange(10, 0), err);
+    }
+
+    #[test]
+    fn adding_at_invalid_index_is_err() {
+        let mut tree = new_tree(3);
+
+        let err = tree.add(4, 0).expect_err("");
+
+        assert_eq!(AddError::IndexOutOfRange(4, 3), err);
+    }
 
     #[test]
     fn range_sum_is_calculated_correctly_for_big_tree() {
         let mut tree = new_tree(100);
 
         for i in 1..101 {
-            tree.add(i - 1, i as i32);
+            tree.add(i - 1, i as i32).unwrap();
         }
 
-        assert_eq!(tree.sum(0..100), 5050);
-        assert_eq!(tree.sum(1..100), 5049);
-        assert_eq!(tree.sum(2..100), 5047);
-        assert_eq!(tree.sum(3..100), 5044);
-        assert_eq!(tree.sum(4..100), 5040);
+        assert_eq!(tree.sum(0..100).unwrap(), 5050);
+        assert_eq!(tree.sum(1..100).unwrap(), 5049);
+        assert_eq!(tree.sum(2..100).unwrap(), 5047);
+        assert_eq!(tree.sum(3..100).unwrap(), 5044);
+        assert_eq!(tree.sum(4..100).unwrap(), 5040);
     }
 
     fn new_tree(size: usize) -> FenwickTree<i32> {

@@ -1,5 +1,7 @@
 use std::ops::{AddAssign, Range, SubAssign};
 
+use crate::errors::{AddError, SumError};
+
 /// An implementation of the binary indexed tree (Fenwick tree) data structure.
 ///
 /// The tree is backed by a simple array/vec of the fixed size where each item is
@@ -34,10 +36,17 @@ where
     /// A partial sum of the specified range.
     ///
     /// Complexity: _O_(log _n_).
-    pub fn sum(&self, range: Range<usize>) -> I {
+    pub fn sum(&self, range: Range<usize>) -> Result<I, SumError> {
         let mut s = I::default();
         let mut i = range.start;
         let mut j = range.end;
+
+        if i == j {
+            return Err(SumError::EmptyRange(i));
+        }
+        if i > j {
+            return Err(SumError::DecreasingRange(i, j));
+        }
 
         while j > i {
             s += self.tree[j - 1];
@@ -49,17 +58,25 @@ where
             i = prev(i);
         }
 
-        s
+        Ok(s)
     }
 
     /// Updates the value at `i` by `delta`.
     ///
     /// Complexity: _O_(log _n_).
-    pub fn add(&mut self, mut i: usize, delta: I) {
-        while i < self.tree.len() {
+    pub fn add(&mut self, mut i: usize, delta: I) -> Result<(), AddError> {
+        let size = self.size();
+
+        if i >= size {
+            return Err(AddError::IndexOutOfRange(i, size));
+        }
+
+        while i < size {
             self.tree[i] += delta;
             i = next(i);
         }
+
+        Ok(())
     }
 }
 
