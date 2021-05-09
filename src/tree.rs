@@ -6,7 +6,7 @@ use crate::errors::{AddError, SumError};
 ///
 /// The tree is backed by a simple array/vec of the fixed size where each item is
 /// responsible for storing cumulative sum of some range, allowing to perform
-/// queries and updates in O(log n) time.
+/// queries and updates in _O_(log _n_) time.
 pub struct FenwickTree<I>
 where
     I: Default + Copy + AddAssign + SubAssign,
