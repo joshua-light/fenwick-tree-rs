@@ -12,11 +12,21 @@
 //!
 //! let mut tree = FenwickTree::<i32>::of_size(3);
 //!
-//! // Both `add` and `sum` have complexity O(log n).
+//! // `add` has time complexity O(log n).
 //! tree.add(0, 1).unwrap(); // Adds `1` to element at `0`.
 //! tree.add(1, 2).unwrap(); // Adds `2` to element at `1`.
 //! tree.add(2, 3).unwrap(); // Adds `3` to element at `2`.
+//! ```
 //!
+//! Calculating all possible partial sums of the tree above.
+//!
+//! ```
+//! # use fenwick_tree::FenwickTree;
+//! # let mut tree = FenwickTree::<i32>::of_size(3);
+//! // `sum` has time complexity O(log n).
+//! # tree.add(0, 1).unwrap(); // Adds `1` to element at `0`.
+//! # tree.add(1, 2).unwrap(); // Adds `2` to element at `1`.
+//! # tree.add(2, 3).unwrap(); // Adds `3` to element at `2`.
 //! assert_eq!(tree.sum(0..1).unwrap(), 1);
 //! assert_eq!(tree.sum(0..2).unwrap(), 3);
 //! assert_eq!(tree.sum(0..3).unwrap(), 6);
@@ -26,6 +36,8 @@
 //!
 //! assert_eq!(tree.sum(2..3).unwrap(), 3);
 //! ```
+//!
+//! For error handling, check [`AddError`] and [`SumError`] structs.
 //!
 //! # Explanation
 //!
