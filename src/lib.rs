@@ -83,16 +83,12 @@
 //!
 //! Updating a value at `i` means traversing the array from left to right, updating
 //! ranges that contain the value.
-//! * `i = 4` -> `8`
-//! * `i = 3` -> `4`
-//! * `i = 2` -> `4`
-//! * `i = 1` -> `2`
 //!
 //! Here similar logic applies as for querying: we need to increase `i` by `g(i)`.
-//! * `i = 4 = 100`, `i + (i & (-i)) = 100 + 100 = 1000 (8)`
-//! * `i = 3 = 011`, `i + (i & (-i)) = 011 + 001 = 0100 (4)`
-//! * `i = 2 = 010`, `i + (i & (-i)) = 010 + 010 = 0100 (4)`
-//! * `i = 1 = 001`, `i + (i & (-i)) = 001 + 001 = 0010 (2)`
+//! * `i = 4 = 100`, `i + g(i) = 1000 (8)`
+//! * `i = 3 = 011`, `i + g(i) = 0100 (4)`
+//! * `i = 2 = 010`, `i + g(i) = 0100 (4)`
+//! * `i = 1 = 001`, `i + g(i) = 0010 (2)`
 //!
 //! That's it!
 //!
