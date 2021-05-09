@@ -26,10 +26,10 @@ impl Display for SumError {
     }
 }
 
-// An error in adding a delta to a tree element.
+/// An error in adding a delta to a tree element.
 #[derive(Debug, PartialEq, Eq)]
 pub enum AddError {
-    // Index is greater than the size of the tree.
+    /// Index is greater than the size of the tree.
     IndexOutOfRange(usize, usize),
 }
 
