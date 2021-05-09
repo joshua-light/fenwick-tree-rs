@@ -10,7 +10,7 @@
 //! ```
 //! use fenwick_tree::FenwickTree;
 //!
-//! let tree = FenwickTree::<i32>::of_size(3);
+//! let mut tree = FenwickTree::<i32>::of_size(3);
 //!
 //! // Both `add` and `sum` have complexity O(log n).
 //! tree.add(0, 1); // Adds `1` to element at `0`.
