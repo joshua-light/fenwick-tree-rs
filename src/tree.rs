@@ -81,7 +81,7 @@ where
 }
 
 /// Flips first trailing `1` in the binary representation of the `i`. Same as `i - (i & (-i))` (see
-/// module docs).
+/// crate docs).
 ///
 /// This allows fast calculating of prefix sums:
 ///     - call `i = prev(i)` until `i` is greater than 0
