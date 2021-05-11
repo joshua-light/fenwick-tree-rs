@@ -11,10 +11,11 @@ pub enum SumError {
     DecreasingRange { start: usize, end: usize },
 }
 
-impl Error for SumError {
-    fn source(&self) -> Option<&(dyn Error + 'static)> {
-        None
-    }
+/// An error in adding a delta to a tree element.
+#[derive(Debug, PartialEq, Eq)]
+pub enum AddError {
+    /// Index is greater than the size of the tree.
+    IndexOutOfRange { index: usize, size: usize },
 }
 
 impl Display for SumError {
@@ -28,11 +29,14 @@ impl Display for SumError {
     }
 }
 
-/// An error in adding a delta to a tree element.
-#[derive(Debug, PartialEq, Eq)]
-pub enum AddError {
-    /// Index is greater than the size of the tree.
-    IndexOutOfRange { index: usize, size: usize },
+impl Display for AddError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        match *self {
+            AddError::IndexOutOfRange { index, size } => {
+                write!(f, "Index `{}` is greater than the size `{}`", index, size)
+            }
+        }
+    }
 }
 
 impl Error for AddError {
@@ -41,12 +45,8 @@ impl Error for AddError {
     }
 }
 
-impl Display for AddError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        match *self {
-            AddError::IndexOutOfRange { index, size } => {
-                write!(f, "Index `{}` is greater than the size `{}`", index, size)
-            }
-        }
+impl Error for SumError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
     }
 }
