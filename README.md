@@ -6,17 +6,16 @@ _An implementation of a binary indexed tree (or Fenwick tree) data structure in 
 
 `fenwick-tree` provides simple implementation of the Fenwick tree that can be used as a building block in some of the algorithms (e.g. weighted random).
 
-The basic API is simple and consists of `add` and `sum` methods. Here is a quick example:
+The basic API is simple and consists of `add` and `sum` methods (both take _O_(log _n_) time). Here is a quick example:
 ```rust
 use fenwick_tree::FenwickTree;
 
 let mut tree = FenwickTree::<i32>::with_len(5);
 
 for i in 0..5 {
-    tree.add(i, i as i32)?; // O(log n).
+    tree.add(i, i as i32)?;
 }
 
-// `sum` takes O(log n) as well.
 assert_eq!(tree.sum(0..5)?, 0 + 1 + 2 + 3 + 4);
 assert_eq!(tree.sum(2..5)?, 2 + 3 + 4);
 ```
