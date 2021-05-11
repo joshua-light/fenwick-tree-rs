@@ -27,3 +27,7 @@ For more details see [documentation](https://docs.rs/fenwick_tree/0.1.0/fenwick_
 ## License
 
 The package is licensed under the [MIT](https://github.com/JoshuaLight/fenwick-tree-rs/blob/master/LICENSE) license.
+
+## Contributing
+
+There are no strict rules for contributing. Feel free to open an issue or submit a pull request.
