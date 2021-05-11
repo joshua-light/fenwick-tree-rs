@@ -21,7 +21,7 @@ where
     /// Constructs a new Fenwick tree with the specified `len` with each element set as
     /// `I::default()`.
     ///
-    /// The vector is initialized with `vec![I::default(); size]`.
+    /// The vector is initialized with `vec![I::default(); len]`.
     pub fn with_len(len: usize) -> Self {
         Self {
             tree: vec![I::default(); len],
