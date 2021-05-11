@@ -4,7 +4,7 @@ use crate::errors::{AddError, SumError};
 
 /// An implementation of the binary indexed tree (Fenwick tree) data structure.
 ///
-/// The tree is backed by a simple array/vec of the fixed size where each item is
+/// The tree is backed by a simple vec of the fixed size where each item is
 /// responsible for storing cumulative sum of some range, allowing to perform
 /// queries and updates in _O_(log _n_) time.
 pub struct FenwickTree<I>
@@ -18,18 +18,18 @@ impl<I> FenwickTree<I>
 where
     I: Default + Copy + AddAssign + SubAssign,
 {
-    /// Constructs a new Fenwick tree of the specified `size` with each element set as
+    /// Constructs a new Fenwick tree with the specified `len` with each element set as
     /// `I::default()`.
     ///
     /// The vector is initialized with `vec![I::default(); size]`.
-    pub fn of_size(size: usize) -> Self {
+    pub fn with_len(len: usize) -> Self {
         Self {
-            tree: vec![I::default(); size],
+            tree: vec![I::default(); len],
         }
     }
 
-    /// A size of the backing vector of the tree.
-    pub fn size(&self) -> usize {
+    /// A length of the backing vector of the tree.
+    pub fn len(&self) -> usize {
         self.tree.len()
     }
 
@@ -65,7 +65,7 @@ where
     ///
     /// Complexity: _O_(log _n_).
     pub fn add(&mut self, mut i: usize, delta: I) -> Result<(), AddError> {
-        let size = self.size();
+        let size = self.len();
 
         if i >= size {
             return Err(AddError::IndexOutOfRange { index: i, size });

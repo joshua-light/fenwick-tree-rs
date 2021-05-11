@@ -12,7 +12,7 @@
 //! ```
 //! use fenwick_tree::FenwickTree;
 //!
-//! let mut tree = FenwickTree::<i32>::of_size(3);
+//! let mut tree = FenwickTree::<i32>::with_len(3);
 //!
 //! // `add` has time complexity O(log n).
 //! tree.add(0, 1).unwrap(); // Adds `1` to element at `0`.
@@ -24,7 +24,7 @@
 //!
 //! ```
 //! # use fenwick_tree::FenwickTree;
-//! # let mut tree = FenwickTree::<i32>::of_size(3);
+//! # let mut tree = FenwickTree::<i32>::with_len(3);
 //! // `sum` has time complexity O(log n).
 //! # tree.add(0, 1).unwrap(); // Adds `1` to element at `0`.
 //! # tree.add(1, 2).unwrap(); // Adds `2` to element at `1`.
@@ -173,6 +173,6 @@ mod tests {
     }
 
     fn new_tree(size: usize) -> FenwickTree<i32> {
-        FenwickTree::<i32>::of_size(size)
+        FenwickTree::<i32>::with_len(size)
     }
 }
