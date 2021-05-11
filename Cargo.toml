@@ -1,7 +1,15 @@
 [package]
 name = "fenwick-tree"
-version = "0.0.1"
+description = "An implementation of a binary indexed tree (Fenwick tree) data structure in Rust."
 authors = ["JoshuaLight <j.light.developer@gmail.com>"]
+
+repository = "https://github.com/JoshuaLight/fenwick-tree-rs"
+readme = "README"
+license = "MIT"
+version = "0.0.1"
 edition = "2018"
+
+keywords = ["fenwick", "tree"]
+categories = ["data-structures"]
 
 [dependencies]
