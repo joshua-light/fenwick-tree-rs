@@ -4,7 +4,7 @@ _An implementation of a binary indexed tree (or Fenwick tree) data structure in 
 
 ## Overview
 
-`fenwick-tree` provides simple implementation of the Fenwick tree that can be used as a building block in some of the algorithms (e.g. weighted random).
+`fenwick-tree` provides simple implementation of the [Fenwick tree](https://en.wikipedia.org/wiki/Fenwick_tree) that can be used as a building block in some of the algorithms (e.g. weighted random).
 
 The basic API is simple and consists of `add` and `sum` methods (both take _O_(log _n_) time). Here is a quick example:
 ```rust
