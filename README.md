@@ -17,8 +17,16 @@ for i in 0..5 {
 }
 
 assert_eq!(tree.sum(0..5)?, 0 + 1 + 2 + 3 + 4);
+assert_eq!(tree.sum(1..5)?, 1 + 2 + 3 + 4);
 assert_eq!(tree.sum(2..5)?, 2 + 3 + 4);
+assert_eq!(tree.sum(3..5)?, 3 + 4);
+assert_eq!(tree.sum(4..5)?, 4);
 ```
+
+### Error handling
+
+Both `add` and `sum` methods return `Result` and are not expected to panic.
+However, `with_len` constructs the backing vector by using `vec![I::default(); len]`, and it actually may panic as in regular Rust code.
 
 ## Learn more
 
