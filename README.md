@@ -22,7 +22,7 @@ assert_eq!(tree.sum(2..5)?, 2 + 3 + 4);
 
 ## Learn more
 
-For more details see [documentation](https://docs.rs/fenwick_tree/0.0.1/fenwick_tree).
+For more details see [documentation](https://docs.rs/fenwick_tree).
 
 ## License
 
