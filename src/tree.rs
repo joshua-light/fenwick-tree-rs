@@ -1,4 +1,4 @@
-use std::ops::{AddAssign, Range, SubAssign};
+use std::ops::{AddAssign, Bound, RangeBounds, SubAssign};
 
 use crate::errors::{AddError, SumError};
 
@@ -36,14 +36,15 @@ where
     /// A partial sum of the specified range.
     ///
     /// Complexity: _O_(log _n_).
-    pub fn sum(&self, range: Range<usize>) -> Result<I, SumError> {
+    pub fn sum(&self, bounds: impl RangeBounds<usize>) -> Result<I, SumError> {
         let mut s = I::default();
-        let mut i = range.start;
-        let mut j = range.end;
+        let mut i = start(bounds.start_bound());
+        let mut j = end(bounds.end_bound(), self.len());
 
         if i == j {
             return Err(SumError::EmptyRange { start: i });
         }
+
         if i > j {
             return Err(SumError::DecreasingRange { start: i, end: j });
         }
@@ -58,7 +59,27 @@ where
             i = prev(i);
         }
 
-        Ok(s)
+        return Ok(s);
+
+        // As inclusive.
+        fn start(bound: Bound<&usize>) -> usize {
+            match bound {
+                Bound::Excluded(&usize::MAX) => usize::MAX,
+                Bound::Excluded(x) => *x + 1,
+                Bound::Included(x) => *x,
+                Bound::Unbounded => 0,
+            }
+        }
+
+        // As exclusive.
+        fn end(bound: Bound<&usize>, len: usize) -> usize {
+            match bound {
+                Bound::Included(0) => 0,
+                Bound::Included(x) => *x + 1,
+                Bound::Excluded(x) => *x,
+                Bound::Unbounded => len,
+            }
+        }
     }
 
     /// Updates the value at `i` by `delta`.
