@@ -11,7 +11,7 @@ _An implementation of a binary indexed tree (or Fenwick tree) data structure in 
 
 The basic API is simple and consists of `add` and `sum` methods (both take _O_(log _n_) time). Here is a quick example:
 ```rust
-use fenwick_tree::FenwickTree;
+use fenwick_tree::*;
 
 let mut tree = FenwickTree::<i32>::with_len(5);
 
