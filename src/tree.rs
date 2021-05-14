@@ -37,16 +37,29 @@ where
     ///
     /// Complexity: _O_(log _n_).
     pub fn sum(&self, bounds: impl RangeBounds<usize>) -> Result<I, SumError> {
+        let len = self.len();
+
         let mut s = I::default();
         let mut i = start(bounds.start_bound());
-        let mut j = end(bounds.end_bound(), self.len());
+        let mut j = end(bounds.end_bound(), len);
 
         if i == j {
-            return Err(SumError::EmptyRange { start: i });
+            return Err(SumError::RangeEmpty {
+                bounds: as_pair(bounds),
+            });
         }
 
         if i > j {
-            return Err(SumError::DecreasingRange { start: i, end: j });
+            return Err(SumError::RangeDecreasing {
+                bounds: as_pair(bounds),
+            });
+        }
+
+        if i >= len || j > len {
+            return Err(SumError::RangeOutsideTree {
+                bounds: as_pair(bounds),
+                len,
+            });
         }
 
         while j > i {
@@ -78,6 +91,21 @@ where
                 Bound::Included(x) => *x + 1,
                 Bound::Excluded(x) => *x,
                 Bound::Unbounded => len,
+            }
+        }
+
+        fn as_pair(bounds: impl RangeBounds<usize>) -> (Bound<usize>, Bound<usize>) {
+            let start = cloned(bounds.start_bound());
+            let end = cloned(bounds.end_bound());
+
+            return (start, end);
+
+            fn cloned(x: Bound<&usize>) -> Bound<usize> {
+                match x {
+                    Bound::Unbounded => Bound::Unbounded,
+                    Bound::Included(x) => Bound::Included(*x),
+                    Bound::Excluded(x) => Bound::Excluded(*x),
+                }
             }
         }
     }

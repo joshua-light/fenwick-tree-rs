@@ -1,14 +1,25 @@
 use std::error::Error;
 use std::fmt::{Display, Formatter, Result as FmtResult};
+use std::ops::Bound;
 
 /// An error in calculating a partial sum.
 #[derive(Debug, PartialEq, Eq)]
 pub enum SumError {
     /// Range is empty: `(0..0)`, `(1..1)`, etc.
-    EmptyRange { start: usize },
+    RangeEmpty {
+        bounds: (Bound<usize>, Bound<usize>),
+    },
 
     /// Range is decreasing: `(10..0)`, etc.
-    DecreasingRange { start: usize, end: usize },
+    RangeDecreasing {
+        bounds: (Bound<usize>, Bound<usize>),
+    },
+
+    // Range is not withing the range of the tree.
+    RangeOutsideTree {
+        bounds: (Bound<usize>, Bound<usize>),
+        len: usize,
+    },
 }
 
 /// An error in adding a delta to a tree element.
@@ -21,10 +32,17 @@ pub enum AddError {
 impl Display for SumError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match *self {
-            SumError::EmptyRange { start } => write!(f, "Range ({}..{}) is empty", start, start),
-            SumError::DecreasingRange { start, end } => {
-                write!(f, "Range ({}..{}) is decreasing", start, end)
+            SumError::RangeEmpty { bounds } => {
+                write!(f, "Bounds {:#?} represent empty range", bounds)
             }
+            SumError::RangeDecreasing { bounds } => {
+                write!(f, "Bounds {:#?} represent decreasing range", bounds)
+            }
+            SumError::RangeOutsideTree { bounds, len } => write!(
+                f,
+                "Bounds {:#?} are outside of the tree range (0..{})",
+                bounds, len
+            ),
         }
     }
 }
