@@ -90,16 +90,16 @@ fn range_sum_is_calculated_correctly_for_custom_bounds() {
     );
 }
 
-fn new_tree(size: usize) -> FenwickTree<i32> {
-    FenwickTree::<i32>::with_len(size)
-}
-
 fn new_filled_tree(size: usize) -> FenwickTree<i32> {
-    let mut tree = FenwickTree::<i32>::with_len(size);
+    let mut tree = new_tree(size);
 
     for i in 1..=size {
         tree.add(i - 1, i as i32).unwrap();
     }
 
     tree
+}
+
+fn new_tree(size: usize) -> FenwickTree<i32> {
+    FenwickTree::<i32>::with_len(size)
 }
