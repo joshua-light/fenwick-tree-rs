@@ -19,11 +19,10 @@ for i in 0..5 {
     tree.add(i, i as i32)?;
 }
 
-assert_eq!(tree.sum(0..5)?, 0 + 1 + 2 + 3 + 4);
-assert_eq!(tree.sum(1..5)?, 1 + 2 + 3 + 4);
+assert_eq!(tree.sum(..)?, 0 + 1 + 2 + 3 + 4);
+assert_eq!(tree.sum(1..)?, 1 + 2 + 3 + 4);
 assert_eq!(tree.sum(2..5)?, 2 + 3 + 4);
-assert_eq!(tree.sum(3..5)?, 3 + 4);
-assert_eq!(tree.sum(4..5)?, 4);
+assert_eq!(tree.sum(3..=4)?, 3 + 4);
 ```
 
 ### Error handling
