@@ -25,10 +25,10 @@
 //! ```
 //! # use fenwick_tree::FenwickTree;
 //! # let mut tree = FenwickTree::<i32>::with_len(3);
-//! // `sum` has time complexity O(log n).
 //! # tree.add(0, 1).unwrap(); // Adds `1` to element at `0`.
 //! # tree.add(1, 2).unwrap(); // Adds `2` to element at `1`.
 //! # tree.add(2, 3).unwrap(); // Adds `3` to element at `2`.
+//! // `sum` has time complexity O(log n).
 //! assert_eq!(tree.sum(0..1).unwrap(), 1);
 //! assert_eq!(tree.sum(0..2).unwrap(), 3);
 //! assert_eq!(tree.sum(0..3).unwrap(), 6);
@@ -37,6 +37,21 @@
 //! assert_eq!(tree.sum(1..3).unwrap(), 5);
 //!
 //! assert_eq!(tree.sum(2..3).unwrap(), 3);
+//! ```
+//!
+//! [`sum`](crate::FenwickTree::sum) accepts [`RangeBounds`](std::ops::RangeBounds), so actually you can use any syntax you'd like.
+//!
+//! ```
+//! # use fenwick_tree::FenwickTree;
+//! # let mut tree = FenwickTree::<i32>::with_len(3);
+//! # tree.add(0, 1).unwrap(); // Adds `1` to element at `0`.
+//! # tree.add(1, 2).unwrap(); // Adds `2` to element at `1`.
+//! # tree.add(2, 3).unwrap(); // Adds `3` to element at `2`.
+//! assert_eq!(tree.sum(..).unwrap(), 6);
+//! assert_eq!(tree.sum(0..).unwrap(), 6);
+//! assert_eq!(tree.sum(..3).unwrap(), 6);
+//! assert_eq!(tree.sum(..=2).unwrap(), 6);
+//! assert_eq!(tree.sum(0..=2).unwrap(), 6);
 //! ```
 //!
 //! For error handling, see [`AddError`] and [`SumError`] structs.
