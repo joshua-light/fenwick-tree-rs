@@ -6,7 +6,7 @@ authors = ["JoshuaLight <j.light.developer@gmail.com>"]
 repository = "https://github.com/JoshuaLight/fenwick-tree-rs"
 readme = "README.md"
 license = "MIT"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2018"
 
 keywords = ["fenwick", "tree"]
