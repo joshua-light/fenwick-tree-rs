@@ -16,7 +16,7 @@ pub enum SumError {
     },
 
     // Range is not withing the range of the tree.
-    RangeOutsideTree {
+    RangeOutside {
         bounds: (Bound<usize>, Bound<usize>),
         len: usize,
     },
@@ -38,7 +38,7 @@ impl Display for SumError {
             SumError::RangeDecreasing { bounds } => {
                 write!(f, "Bounds {:#?} represent decreasing range", bounds)
             }
-            SumError::RangeOutsideTree { bounds, len } => write!(
+            SumError::RangeOutside { bounds, len } => write!(
                 f,
                 "Bounds {:#?} are outside of the tree range (0..{})",
                 bounds, len

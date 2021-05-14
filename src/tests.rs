@@ -37,7 +37,7 @@ fn sum_of_range_with_too_big_lower_bound_is_err() {
     let err = tree.sum(3..4).expect_err("");
 
     assert_eq!(
-        SumError::RangeOutsideTree {
+        SumError::RangeOutside {
             bounds: (Bound::Included(3), Bound::Excluded(4)),
             len: 3
         },
@@ -52,7 +52,7 @@ fn sum_of_range_with_too_big_upper_bound_is_err() {
     let err = tree.sum(0..=4).expect_err("");
 
     assert_eq!(
-        SumError::RangeOutsideTree {
+        SumError::RangeOutside {
             bounds: (Bound::Included(0), Bound::Included(4)),
             len: 3
         },

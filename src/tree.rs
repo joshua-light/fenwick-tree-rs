@@ -56,7 +56,7 @@ where
         }
 
         if i >= len || j > len {
-            return Err(SumError::RangeOutsideTree {
+            return Err(SumError::RangeOutside {
                 bounds: as_pair(bounds),
                 len,
             });
