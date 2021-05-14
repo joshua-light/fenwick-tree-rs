@@ -61,6 +61,7 @@ where
 
         return Ok(s);
 
+        // As inclusive.
         fn start(bound: Bound<&usize>) -> usize {
             match bound {
                 Bound::Excluded(&usize::MAX) => usize::MAX,
@@ -70,6 +71,7 @@ where
             }
         }
 
+        // As exclusive.
         fn end(bound: Bound<&usize>, len: usize) -> usize {
             match bound {
                 Bound::Included(0) => 0,
