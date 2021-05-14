@@ -73,7 +73,7 @@ where
         fn end(bound: Bound<&usize>, len: usize) -> usize {
             match bound {
                 Bound::Included(0) => 0,
-                Bound::Included(x) => *x - 1,
+                Bound::Included(x) => *x + 1,
                 Bound::Excluded(x) => *x,
                 Bound::Unbounded => len,
             }

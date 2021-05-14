@@ -1,3 +1,5 @@
+use std::ops::Bound;
+
 use crate::*;
 
 #[test]
@@ -28,20 +30,76 @@ fn adding_at_invalid_index_is_err() {
 }
 
 #[test]
-fn range_sum_is_calculated_correctly_for_big_tree() {
-    let mut tree = new_tree(100);
+fn range_sum_is_calculated_correctly_for_range() {
+    let tree = new_filled_tree(3);
 
-    for i in 1..101 {
-        tree.add(i - 1, i as i32).unwrap();
-    }
+    assert_eq!(tree.sum(0..3).unwrap(), 1 + 2 + 3);
+}
 
-    assert_eq!(tree.sum(0..100).unwrap(), 5050);
-    assert_eq!(tree.sum(1..100).unwrap(), 5049);
-    assert_eq!(tree.sum(2..100).unwrap(), 5047);
-    assert_eq!(tree.sum(3..100).unwrap(), 5044);
-    assert_eq!(tree.sum(4..100).unwrap(), 5040);
+#[test]
+fn range_sum_is_calculated_correctly_for_range_from() {
+    let tree = new_filled_tree(3);
+
+    assert_eq!(tree.sum(0..).unwrap(), 1 + 2 + 3);
+    assert_eq!(tree.sum(1..).unwrap(), 2 + 3);
+}
+
+#[test]
+fn range_sum_is_calculated_correctly_for_range_to() {
+    let tree = new_filled_tree(3);
+
+    assert_eq!(tree.sum(..3).unwrap(), 1 + 2 + 3);
+    assert_eq!(tree.sum(..2).unwrap(), 1 + 2);
+}
+
+#[test]
+fn range_sum_is_calculated_correctly_for_range_full() {
+    let tree = new_filled_tree(3);
+
+    assert_eq!(tree.sum(..).unwrap(), 1 + 2 + 3);
+}
+
+#[test]
+fn range_sum_is_calculated_correctly_for_range_inclusive() {
+    let tree = new_filled_tree(3);
+
+    assert_eq!(tree.sum(0..=2).unwrap(), 1 + 2 + 3);
+    assert_eq!(tree.sum(0..=1).unwrap(), 1 + 2);
+}
+
+#[test]
+fn range_sum_is_calculated_correctly_for_range_to_inclusive() {
+    let tree = new_filled_tree(3);
+
+    assert_eq!(tree.sum(..=2).unwrap(), 1 + 2 + 3);
+    assert_eq!(tree.sum(..=1).unwrap(), 1 + 2);
+}
+
+#[test]
+fn range_sum_is_calculated_correctly_for_custom_bounds() {
+    let tree = new_filled_tree(3);
+
+    assert_eq!(
+        tree.sum((Bound::Included(0), Bound::Excluded(1))).unwrap(),
+        1
+    );
+
+    assert_eq!(
+        tree.sum((Bound::Excluded(0), Bound::Included(1))).unwrap(),
+        2
+    );
 }
 
 fn new_tree(size: usize) -> FenwickTree<i32> {
     FenwickTree::<i32>::with_len(size)
+}
+
+fn new_filled_tree(size: usize) -> FenwickTree<i32> {
+    let mut tree = FenwickTree::<i32>::with_len(size);
+
+    for i in 1..=size {
+        tree.add(i - 1, i as i32).unwrap();
+    }
+
+    tree
 }
