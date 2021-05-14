@@ -63,18 +63,19 @@ where
 
         fn start(bound: Bound<&usize>) -> usize {
             match bound {
-                Bound::Unbounded => 0,
+                Bound::Excluded(&usize::MAX) => usize::MAX,
+                Bound::Excluded(x) => *x + 1,
                 Bound::Included(x) => *x,
-                _ => 0,
+                Bound::Unbounded => 0,
             }
         }
 
         fn end(bound: Bound<&usize>, len: usize) -> usize {
             match bound {
-                Bound::Unbounded => len,
                 Bound::Included(0) => 0,
                 Bound::Included(x) => *x - 1,
                 Bound::Excluded(x) => *x,
+                Bound::Unbounded => len,
             }
         }
     }
