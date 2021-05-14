@@ -15,7 +15,7 @@ pub enum SumError {
         bounds: (Bound<usize>, Bound<usize>),
     },
 
-    // Range is not withing the range of the tree.
+    // Range is not within the range of the tree.
     RangeOutside {
         bounds: (Bound<usize>, Bound<usize>),
         len: usize,
