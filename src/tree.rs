@@ -50,28 +50,28 @@ where
     pub fn sum(&self, bounds: impl RangeBounds<usize>) -> Result<I, SumError> {
         let len = self.len();
 
-        let mut s = I::default();
-        let mut i = start(bounds.start_bound());
-        let mut j = end(bounds.end_bound(), len);
+        let mut sum = I::default();
+        let mut start = start(bounds.start_bound());
+        let mut end = end(bounds.end_bound(), len);
 
-        if i >= len || j > len {
+        if start >= len || end > len {
             return Err(SumError::OutOfRange {
                 bounds: as_pair(bounds),
                 len,
             });
         }
 
-        while j > i {
-            s += self.tree[j - 1];
-            j = prev(j);
+        while end > start {
+            sum += self.tree[end - 1];
+            end = prev(end);
         }
 
-        while i > j {
-            s -= self.tree[i - 1];
-            i = prev(i);
+        while start > end {
+            sum -= self.tree[start - 1];
+            start = prev(start);
         }
 
-        return Ok(s);
+        return Ok(sum);
 
         // As inclusive.
         fn start(bound: Bound<&usize>) -> usize {
