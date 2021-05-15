@@ -5,6 +5,8 @@
 //!
 //! For more details, see [Explanation](#explanation) section.
 //!
+//! For tree API, see [`FenwickTree`] struct.
+//!
 //! # Examples
 //!
 //! Constructing a new tree that is equal to `[1, 2, 3]` array.
