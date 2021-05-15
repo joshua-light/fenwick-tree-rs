@@ -33,9 +33,15 @@ where
         self.tree.len()
     }
 
-    /// A partial sum of the specified range.
+    /// A partial sum of the specified `bounds`.
     ///
     /// Complexity: _O_(log _n_).
+    ///
+    /// Note that `sum` for empty range (a range `(i..j)` where `i >= j`) is `0`.
+    ///
+    /// Also, `bounds` are converted into a pair `(start, end)` that represents `[start,
+    /// end)` range. This means that `tree.sum(0..=usize::MAX)` is equal to `tree.sum(0..usize::MAX)`.
+    /// However, in practice, it's not possible to construct such a big tree.
     pub fn sum(&self, bounds: impl RangeBounds<usize>) -> Result<I, SumError> {
         let len = self.len();
 
@@ -43,20 +49,8 @@ where
         let mut i = start(bounds.start_bound());
         let mut j = end(bounds.end_bound(), len);
 
-        if i == j {
-            return Err(SumError::RangeEmpty {
-                bounds: as_pair(bounds),
-            });
-        }
-
-        if i > j {
-            return Err(SumError::RangeDecreasing {
-                bounds: as_pair(bounds),
-            });
-        }
-
         if i >= len || j > len {
-            return Err(SumError::RangeOutside {
+            return Err(SumError::OutOfRange {
                 bounds: as_pair(bounds),
                 len,
             });

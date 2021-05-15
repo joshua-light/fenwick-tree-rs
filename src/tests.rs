@@ -3,31 +3,17 @@ use std::ops::Bound;
 use crate::*;
 
 #[test]
-fn sum_of_empty_range_is_err() {
+fn sum_of_empty_range_is_0() {
     let tree = new_tree(3);
 
-    let err = tree.sum(0..0).err().unwrap();
-
-    assert_eq!(
-        SumError::RangeEmpty {
-            bounds: (Bound::Included(0), Bound::Excluded(0)),
-        },
-        err
-    );
+    assert_eq!(tree.sum(0..0).unwrap(), 0);
 }
 
 #[test]
-fn sum_of_decreasing_range_is_err() {
+fn sum_of_decreasing_range_is_0() {
     let tree = new_tree(3);
 
-    let err = tree.sum(10..0).expect_err("");
-
-    assert_eq!(
-        SumError::RangeDecreasing {
-            bounds: (Bound::Included(10), Bound::Excluded(0)),
-        },
-        err
-    );
+    assert_eq!(tree.sum(2..0).unwrap(), 0);
 }
 
 #[test]
@@ -37,7 +23,7 @@ fn sum_of_range_with_too_big_lower_bound_is_err() {
     let err = tree.sum(3..4).expect_err("");
 
     assert_eq!(
-        SumError::RangeOutside {
+        SumError::OutOfRange {
             bounds: (Bound::Included(3), Bound::Excluded(4)),
             len: 3
         },
@@ -52,7 +38,7 @@ fn sum_of_range_with_too_big_upper_bound_is_err() {
     let err = tree.sum(0..=4).expect_err("");
 
     assert_eq!(
-        SumError::RangeOutside {
+        SumError::OutOfRange {
             bounds: (Bound::Included(0), Bound::Included(4)),
             len: 3
         },

@@ -5,18 +5,8 @@ use std::ops::Bound;
 /// An error in calculating a partial sum.
 #[derive(Debug, PartialEq, Eq)]
 pub enum SumError {
-    /// Range is empty: `(0..0)`, `(1..1)`, etc.
-    RangeEmpty {
-        bounds: (Bound<usize>, Bound<usize>),
-    },
-
-    /// Range is decreasing: `(10..0)`, etc.
-    RangeDecreasing {
-        bounds: (Bound<usize>, Bound<usize>),
-    },
-
     // Range is not within the range of the tree.
-    RangeOutside {
+    OutOfRange {
         bounds: (Bound<usize>, Bound<usize>),
         len: usize,
     },
@@ -32,17 +22,9 @@ pub enum AddError {
 impl Display for SumError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match *self {
-            SumError::RangeEmpty { bounds } => {
-                write!(f, "Bounds {:#?} represent empty range", bounds)
+            SumError::OutOfRange { bounds, len } => {
+                write!(f, "Bounds {:#?} are not in tree range (0..{})", bounds, len)
             }
-            SumError::RangeDecreasing { bounds } => {
-                write!(f, "Bounds {:#?} represent decreasing range", bounds)
-            }
-            SumError::RangeOutside { bounds, len } => write!(
-                f,
-                "Bounds {:#?} are outside of the tree range (0..{})",
-                bounds, len
-            ),
         }
     }
 }
