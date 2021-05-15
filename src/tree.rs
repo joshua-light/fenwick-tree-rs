@@ -40,8 +40,9 @@ where
     /// Note that `sum` for empty range (a range `(i..j)` where `i >= j`) is `0`.
     ///
     /// Also, `bounds` are converted into a pair `(start, end)` that represents `[start,
-    /// end)` range. This means that `tree.sum(0..=usize::MAX)` is equal to `tree.sum(0..usize::MAX)`.
-    /// However, in practice, it's not possible to construct such a big tree.
+    /// end)` range. This means that boundary case `tree.sum(i..=usize::MAX)` fallbacks to `tree.sum(0..usize::MAX)`.
+    /// However, in practice, it's not possible to construct such a big tree ([`Vec`] panics with
+    /// `capacity overflow`).
     pub fn sum(&self, bounds: impl RangeBounds<usize>) -> Result<I, SumError> {
         let len = self.len();
 
