@@ -99,6 +99,7 @@ where
 
             return (start, end);
 
+            // From nightly Rust.
             fn cloned(x: Bound<&usize>) -> Bound<usize> {
                 match x {
                     Bound::Unbounded => Bound::Unbounded,
