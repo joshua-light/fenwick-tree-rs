@@ -23,7 +23,7 @@ impl Display for SumError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match *self {
             SumError::OutOfRange { bounds, len } => {
-                write!(f, "Bounds {:#?} are not in tree range (0..{})", bounds, len)
+                write!(f, "Bounds {:#?} are not in range (0..{})", bounds, len)
             }
         }
     }
