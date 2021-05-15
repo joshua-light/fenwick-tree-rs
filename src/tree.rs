@@ -22,6 +22,10 @@ where
     /// `I::default()`.
     ///
     /// The vector is initialized with `vec![I::default(); len]`.
+    ///
+    /// # Panics
+    ///
+    /// Vector initialization may panic if `len` is too big.
     pub fn with_len(len: usize) -> Self {
         Self {
             tree: vec![I::default(); len],
