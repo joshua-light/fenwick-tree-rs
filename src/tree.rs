@@ -99,7 +99,7 @@ where
 
             return (start, end);
 
-            // From nightly Rust.
+            // From nightly Rust (https://doc.rust-lang.org/std/ops/enum.Bound.html#method.cloned).
             fn cloned(x: Bound<&usize>) -> Bound<usize> {
                 match x {
                     Bound::Unbounded => Bound::Unbounded,
