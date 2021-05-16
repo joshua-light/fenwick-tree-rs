@@ -3,7 +3,7 @@
 [![crates.io](https://img.shields.io/crates/v/fenwick-tree)](https://crates.io/crates/fenwick-tree)
 [![Build](https://github.com/JoshuaLight/fenwick-tree-rs/workflows/Build/badge.svg)](https://github.com/JoshuaLight/fenwick-tree-rs/actions/workflows/build.yml)
 
-_An implementation of a binary indexed tree (or Fenwick tree) data structure in Rust._
+_An implementation of the binary indexed tree (or Fenwick tree) data structure in Rust._
 
 ## Overview
 
