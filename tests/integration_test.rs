@@ -1,6 +1,6 @@
 use std::ops::Bound;
 
-use crate::*;
+use fenwick_tree::*;
 
 #[test]
 fn sum_of_empty_range_is_0() {

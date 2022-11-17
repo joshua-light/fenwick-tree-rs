@@ -135,10 +135,6 @@
 //!
 //! # References
 //! * [A New Data Structure for Cumulative Frequency Tables (1994)](https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.14.8917)
-
-#[cfg(test)]
-mod tests;
-
 mod errors;
 mod tree;
 

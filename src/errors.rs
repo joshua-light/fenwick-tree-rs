@@ -39,14 +39,6 @@ impl Display for AddError {
     }
 }
 
-impl Error for SumError {
-    fn source(&self) -> Option<&(dyn Error + 'static)> {
-        None
-    }
-}
+impl Error for SumError {}
 
-impl Error for AddError {
-    fn source(&self) -> Option<&(dyn Error + 'static)> {
-        None
-    }
-}
+impl Error for AddError {}
