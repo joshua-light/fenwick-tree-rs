@@ -1,5 +1,7 @@
 use std::ops::{AddAssign, Bound, RangeBounds, SubAssign};
 
+use num_traits::Zero;
+
 use crate::errors::{AddError, SumError};
 
 /// An implementation of the binary indexed tree (Fenwick tree) data structure.
@@ -9,14 +11,15 @@ use crate::errors::{AddError, SumError};
 /// queries and updates in _O_(log _n_) time.
 pub struct FenwickTree<I>
 where
-    I: Default + Copy + AddAssign + SubAssign,
+    I: Zero + Copy + AddAssign + SubAssign,
 {
     tree: Vec<I>,
 }
 
+#[allow(clippy::len_without_is_empty)]
 impl<I> FenwickTree<I>
 where
-    I: Default + Copy + AddAssign + SubAssign,
+    I: Zero + Copy + AddAssign + SubAssign,
 {
     /// Constructs a new Fenwick tree with the specified `len` with each element set as
     /// `I::default()`.
@@ -28,7 +31,7 @@ where
     /// Vector initialization may panic if `len` is too big.
     pub fn with_len(len: usize) -> Self {
         Self {
-            tree: vec![I::default(); len],
+            tree: vec![I::zero(); len],
         }
     }
 
@@ -47,10 +50,13 @@ where
     /// end)` range. This means that boundary case `tree.sum(i..=usize::MAX)` fallbacks to `tree.sum(0..usize::MAX)`.
     /// However, in practice, it's not possible to construct such a big tree ([`Vec`] panics with
     /// `capacity overflow`).
-    pub fn sum(&self, bounds: impl RangeBounds<usize>) -> Result<I, SumError> {
+    pub fn sum<T>(&self, bounds: T) -> Result<I, SumError>
+    where
+        T: RangeBounds<usize>,
+    {
         let len = self.len();
 
-        let mut sum = I::default();
+        let mut sum = I::zero();
         let mut start = start(bounds.start_bound());
         let mut end = end(bounds.end_bound(), len);
 
@@ -71,43 +77,7 @@ where
             start = prev(start);
         }
 
-        return Ok(sum);
-
-        // As inclusive.
-        fn start(bound: Bound<&usize>) -> usize {
-            match bound {
-                Bound::Excluded(&usize::MAX) => usize::MAX,
-                Bound::Excluded(x) => *x + 1,
-                Bound::Included(x) => *x,
-                Bound::Unbounded => 0,
-            }
-        }
-
-        // As exclusive.
-        fn end(bound: Bound<&usize>, len: usize) -> usize {
-            match bound {
-                Bound::Included(&usize::MAX) => usize::MAX,
-                Bound::Included(x) => *x + 1,
-                Bound::Excluded(x) => *x,
-                Bound::Unbounded => len,
-            }
-        }
-
-        fn as_pair(bounds: impl RangeBounds<usize>) -> (Bound<usize>, Bound<usize>) {
-            let start = cloned(bounds.start_bound());
-            let end = cloned(bounds.end_bound());
-
-            return (start, end);
-
-            // From nightly Rust (https://doc.rust-lang.org/std/ops/enum.Bound.html#method.cloned).
-            fn cloned(x: Bound<&usize>) -> Bound<usize> {
-                match x {
-                    Bound::Unbounded => Bound::Unbounded,
-                    Bound::Included(x) => Bound::Included(*x),
-                    Bound::Excluded(x) => Bound::Excluded(*x),
-                }
-            }
-        }
+        Ok(sum)
     }
 
     /// Updates the value at `i` by `delta`.
@@ -140,6 +110,7 @@ where
 /// However, it's worth to note that zero-based solution (`i & (i + 1)`) produces less cleaner code
 /// because to iterate we need to call `i = prev(i) - 1`, which involves additional checks when `i`
 /// is of `usize` (decrement may result in panic).
+#[inline(always)]
 const fn prev(i: usize) -> usize {
     i & (i - 1)
 }
@@ -149,6 +120,37 @@ const fn prev(i: usize) -> usize {
 /// In the same way as with `prev`, `i = next(i)` allows traversing the array but in the opposite
 /// direction.
 /// However, unlike `prev`, this function assumes that indexing is zero-based, hence we access sums by `i`.
+#[inline(always)]
 const fn next(i: usize) -> usize {
     i | (i + 1)
+}
+
+// As inclusive.
+#[inline(always)]
+fn start(bound: Bound<&usize>) -> usize {
+    match bound {
+        Bound::Excluded(&usize::MAX) => usize::MAX,
+        Bound::Excluded(x) => *x + 1,
+        Bound::Included(x) => *x,
+        Bound::Unbounded => usize::MIN,
+    }
+}
+
+// As exclusive.
+#[inline(always)]
+fn end(bound: Bound<&usize>, len: usize) -> usize {
+    match bound {
+        Bound::Included(&usize::MAX) => usize::MAX,
+        Bound::Included(x) => *x + 1,
+        Bound::Excluded(x) => *x,
+        Bound::Unbounded => len,
+    }
+}
+
+#[inline(always)]
+fn as_pair<T>(bounds: T) -> (Bound<usize>, Bound<usize>)
+where
+    T: RangeBounds<usize>,
+{
+    (bounds.start_bound().cloned(), bounds.end_bound().cloned())
 }
